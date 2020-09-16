@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from catalog.models import Book, Author, BookInstance, Genre
+from django.views import generic
 
 def index(request):
     """View function for home page of site."""
@@ -23,3 +24,43 @@ def index(request):
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 10
+    context_object_name = 'book_list'   # your own name for the list as a template variable
+    template_name = 'book_list.html'  # Specify your own template name/location
+
+    def get_queryset(self):
+        return Book.objects.all()[:5]
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(BookListView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        return context
+
+class BookDetailView(generic.DetailView):
+    model = Book
+    template_name = 'book_detail.html'
+    
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 20
+    context_object_name = 'author_list'   # your own name for the list as a template variable
+    template_name = 'author_list.html'  # Specify your own template name/location
+
+    def get_queryset(self):
+        return Author.objects.all()[:20]
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(AuthorListView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        return context
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
+    paginate_by = 10
+    context_object_name = 'author_detail'   # your own name for the list as a template variable
+    template_name = 'author_detail.html'  # Specify your own template name/location
