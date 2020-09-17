@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from catalog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,3 +33,11 @@ urlpatterns += [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
+]
+
+urlpatterns += [   
+    path('mybooks/', views.LoanedBooksByUserListView.as_view(), name='my-borrowed'),
+]
